@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 # OMDUTA CLOUD — Neon Premium VPS Banner
 
@@ -15,7 +16,7 @@ bar() {
     local value="${1:-0}"
     local filled i
 
-    value="${value%%%}"
+    value="${value%\%}"
     [[ "$value" =~ ^[0-9]+$ ]] || value=0
 
     (( value < 0 )) && value=0
@@ -25,9 +26,9 @@ bar() {
 
     for ((i=1; i<=14; i++)); do
         if (( i <= filled )); then
-            printf '%b■ %b' "$G" "$N"
+            printf '%b■%b' "$G" "$N"
         else
-            printf '%b□ %b' "$D" "$N"
+            printf '%b□%b' "$D" "$N"
         fi
     done
 }
@@ -38,8 +39,7 @@ n=$(nproc 2>/dev/null || echo 1)
 load1=$(awk '{print $1}' /proc/loadavg 2>/dev/null || echo 0)
 load_all=$(awk '{print $1" "$2" "$3}' /proc/loadavg 2>/dev/null || echo "0 0 0")
 
-cp=$(awk -v l="$load1" -v c="$n" '
-BEGIN {
+cp=$(awk -v l="$load1" -v c="$n" 'BEGIN {
     p=(c>0 ? l/c*100 : 0)
     if(p>100)p=100
     if(p<0)p=0
@@ -62,16 +62,14 @@ dt=${dt:-N/A}
 du=${du:-N/A}
 dp=${dp:-0%}
 
-disk_pct="${dp%%%}"
+disk_pct="${dp%\%}"
 [[ "$disk_pct" =~ ^[0-9]+$ ]] || disk_pct=0
 
 model=$(grep -m1 'model name' /proc/cpuinfo 2>/dev/null |
-         cut -d: -f2- | sed 's/^ *//')
-
+    cut -d: -f2- | sed 's/^ *//')
 model=${model:-Unknown CPU}
 
 os=$(. /etc/os-release 2>/dev/null; printf '%s' "${PRETTY_NAME:-Unknown OS}")
-
 host=$(hostname 2>/dev/null || echo unknown)
 jam=$(date '+%H:%M:%S WIB' 2>/dev/null || date '+%H:%M:%S')
 
@@ -83,10 +81,10 @@ node=$(node -v 2>/dev/null || echo "Not installed")
 # Banner
 printf '\n'
 printf '%b  ╭──────────────────────────────────────────────╮ %b\n' "$C" "$N"
-printf '%b  │ %b       O M D U T A   C L O U D          %b│ %b\n' "$C" "$V" "$C" "$N"
+printf '%b  │%b       O M D U T A   C L O U D          %b│ %b\n' "$C" "$V" "$C" "$N"
 printf '%b  ╰──────────────────────────────────────────────╯ %b\n' "$C" "$N"
-printf '\n'
 
+printf '\n'
 if command -v toilet >/dev/null 2>&1; then
     toilet -f future --filter gay '@OmdutaMd'
 else
@@ -115,6 +113,12 @@ printf '\n'
 printf '  %b┌───[ %bK O N E K S I%b ]───────────────────────┐%b\n' "$V" "$Y" "$V" "$N"
 printf '  %b│%b  🌐 IP     : %b%s%b\n' "$V" "$N" "$Y" "$ip" "$N"
 printf '  %b│%b  🟢 Node   : %s\n' "$V" "$N" "$node"
+printf '  %b└──────────────────────────────────────────────┘%b\n' "$V" "$N"
+
+printf '\n'
+printf '  %b┌───[ %bO W N E R   I N F O%b ]───────────────────┐%b\n' "$V" "$Y" "$V" "$N"
+printf '  %b│%b  👤 Owner  : %b@OmdutaMd%b\n' "$V" "$N" "$P" "$N"
+printf '  %b│%b  ✈ Telegram: %bhttps://t.me/OmdutaMd%b\n' "$V" "$N" "$C" "$N"
 printf '  %b└──────────────────────────────────────────────┘%b\n' "$V" "$N"
 
 printf '\n'
