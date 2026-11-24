@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && chmod 700 /root/.ssh \
     && rm -rf /var/lib/apt/lists/*
 
-# SSH configuration
+# SSH CONFIGURATION
 RUN printf '%s\n' \
     'Port 2222' \
     'AddressFamily any' \
@@ -36,7 +36,7 @@ RUN printf '%s\n' \
     'ClientAliveCountMax 3' \
     > /etc/ssh/sshd_config
 
-# Banner
+# BANNER
 COPY banner.sh /usr/local/bin/vps
 
 RUN chmod 755 /usr/local/bin/vps \
@@ -44,7 +44,7 @@ RUN chmod 755 /usr/local/bin/vps \
        '[ -t 1 ] && /usr/local/bin/vps' \
        > /etc/profile.d/banner.sh
 
-# Generate SSH host keys
+# SSH HOST KEYS
 RUN ssh-keygen -A \
     && /usr/sbin/sshd -t
 
