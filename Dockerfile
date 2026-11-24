@@ -4,7 +4,6 @@ FROM ${BASE_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openssh-server \
     curl \
@@ -24,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # SSH configuration
 RUN printf '%s\n' \
-    'Port 22' \
+    'Port 2222' \
     'AddressFamily any' \
     'PermitRootLogin prohibit-password' \
     'PubkeyAuthentication yes' \
@@ -45,11 +44,10 @@ RUN chmod 755 /usr/local/bin/vps \
        '[ -t 1 ] && /usr/local/bin/vps' \
        > /etc/profile.d/banner.sh
 
-# SSH host keys and configuration validation
+# Generate SSH host keys
 RUN ssh-keygen -A \
     && /usr/sbin/sshd -t
 
 EXPOSE 2222
 
-# Keep SSH in foreground for Railway
 CMD ["/usr/sbin/sshd", "-D", "-e"]
