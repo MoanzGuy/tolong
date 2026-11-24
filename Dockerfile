@@ -49,7 +49,7 @@ RUN chmod 755 /usr/local/bin/vps \
 RUN ssh-keygen -A \
     && /usr/sbin/sshd -t
 
-EXPOSE 22
+EXPOSE 2222
 
 # Keep SSH in foreground for Railway
 CMD ["/usr/sbin/sshd", "-D", "-e"]
