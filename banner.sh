@@ -11,7 +11,7 @@ D='\033[38;5;242m'
 N='\033[0m'
 C='\033[38;5;51m'
 
-# Resource Bar — 14 blocks
+# Resource Bar
 bar() {
     local value="${1:-0}"
     local filled i
@@ -19,13 +19,13 @@ bar() {
     value="${value%\%}"
     [[ "$value" =~ ^[0-9]+$ ]] || value=0
 
-    (( value < 0 )) && value=0
     (( value > 100 )) && value=100
+    (( value < 0 )) && value=0
 
-    filled=$(( value * 14 / 100 ))
+    filled=$((value * 14 / 100))
 
     for ((i=1; i<=14; i++)); do
-        if (( i <= filled )); then
+        if ((i <= filled)); then
             printf '%b■%b' "$G" "$N"
         else
             printf '%b□%b' "$D" "$N"
@@ -50,8 +50,8 @@ read -r mt mu <<< "$(free -m 2>/dev/null | awk '/^Mem:/ {print $2,$3}')"
 mt=${mt:-0}
 mu=${mu:-0}
 
-if (( mt > 0 )); then
-    rp=$(( mu * 100 / mt ))
+if ((mt > 0)); then
+    rp=$((mu * 100 / mt))
 else
     rp=0
 fi
@@ -65,8 +65,7 @@ dp=${dp:-0%}
 disk_pct="${dp%\%}"
 [[ "$disk_pct" =~ ^[0-9]+$ ]] || disk_pct=0
 
-model=$(grep -m1 'model name' /proc/cpuinfo 2>/dev/null |
-    cut -d: -f2- | sed 's/^ *//')
+model=$(grep -m1 'model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2- | sed 's/^ *//')
 model=${model:-Unknown CPU}
 
 os=$(. /etc/os-release 2>/dev/null; printf '%s' "${PRETTY_NAME:-Unknown OS}")
